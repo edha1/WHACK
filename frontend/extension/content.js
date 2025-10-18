@@ -1,8 +1,9 @@
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action === "getInformation") {
 
-    // if looking at a twitter post, just send content to the model
+    
     const pageLang = document.documentElement.lang || "unknown";
+    // if looking at a twitter post, just send content to the model
     const tweetEl = document.querySelector('div[data-testid="tweetText"]');
     if (tweetEl) {
         const twitterData = " " + "\n" + tweetEl.innerText.trim();
