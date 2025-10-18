@@ -1,11 +1,11 @@
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action === "getInformation") {
 
-
     // if looking at a twitter post, just send content to the model
+    const pageLang = document.documentElement.lang || "unknown";
     const tweetEl = document.querySelector('div[data-testid="tweetText"]');
     if (tweetEl) {
-        const twitterData = tweetEl.innerText.trim();
+        const twitterData = " " + "\n" + tweetEl.innerText.trim();
         chrome.runtime.sendMessage(
         { action: "sendTwitterInfoToModel", twitterData },
         (response) => sendResponse(response)
@@ -13,35 +13,37 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     } else {
 
     const articles = document.getElementsByTagName("article");
-    const DATE_REGEX = /\b([1-9]|[12][0-9]|3[01])(st|nd|rd|th)?\s+(January|February|March|April|May|June|July|August|September|October|November|December|Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+\d{4}\b/g;
 
     let header = "";
-    let dates = [];
-    let content = [];
+    let paragraphArr = [];
 
-    // get the header
+    // get the header of the article
     for (let article of articles) {
       const h1Elements = article.querySelectorAll("h1");
-      header = Array.from(h1Elements).map((h1) => h1.innerText.trim());
+        if (h1Elements.length > 0) {
+          header = h1Elements[0].innerText.trim(); 
+          break; // only need first one
+        }
     }
 
-    // get the date 
-    const dateFromTimeEl = document.getElementsByTagName("time");
-    if (dateFromTimeEl.length > 0) {
-      const datesUnfiltered = Array.from(dateFromTimeEl).map((d) => d.innerText.trim());
-      dates = datesUnfiltered.filter((d) => DATE_REGEX.test(d));
-    }
-
-    // get the content
+    // get the content of article 
     for (let article of articles) {
-      const allContent = article.querySelectorAll("p");
-      content.push(...Array.from(allContent).map((p) => p.innerText.trim()));
-    }
+        const allContent = article.querySelectorAll("p");
+        paragraphArr.push(
+          ...Array.from(allContent)
+            .map((p) => p.innerText.trim())
+            .filter((text) => text.length > 0)
+        );
+      }
 
-    // send to flask backend to input code into the model
-    // TODO: make content not a list of paragraphs, and put title, new line, content
+    // join all paragraphs into one continuous string
+    const content = paragraphArr.join(" "); 
+    // combine header + newline + content to match model input 
+    const newsData = header + "\n" + content; 
+    
+
     chrome.runtime.sendMessage(
-      { action: "sendNewsInfoToModel", header, content, date: dates },
+      { action: "sendNewsInfoToModel", newsData: newsData, language: pageLang },
       (response) => sendResponse(response)
     );
     }

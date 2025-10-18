@@ -19,13 +19,7 @@ btn.addEventListener("click", () => {
             
             // for testing, see the title, content and date 
             document.getElementById("content").innerText =
-                response?.received.content?.join("\n") || "No <p> found.";
-
-            document.getElementById("header").innerText =
-                response?.received.header?.join("\n") || "No <h1> found.";
-
-            document.getElementById("date").innerText =
-                response?.received.date?.join("\n") || "No <time> found.";
+                response?.received.newsData || "No <p> found.";
 
             // TODO: need to add to output the responses
             // output(response?.received.);
