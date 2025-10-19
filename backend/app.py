@@ -32,4 +32,4 @@ def check_article():
         return jsonify({"error": "Internal server error"}), 500
 
 if __name__ == '__main__':
-    app.run(port=5000, debug=True)  # TODO: Turn off debug in prod
+    app.run(port=5000)  
