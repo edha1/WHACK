@@ -54,7 +54,3 @@ python app.py
 *Displaying Accuracy Rating*
 
 ---
-
-## 🤝 Contributors
-Team **InforMATE** — Created for the **Brevan Howard Problem Statement**.  
-Empowering users with **truthful, transparent, and trustworthy** information.
