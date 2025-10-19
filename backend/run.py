@@ -9,9 +9,9 @@ models = load_models()
 def normalise(prediction, accuracy):
     return ((1 if prediction else -1) * accuracy + 1) / 2
 
-def predict(content):
+def predict(title, content):
     confidence = 0
-    text = f"{clean_text(content)}"
+    text = f"{clean_text(title)}\n{clean_text(content)}"
     for name, model in models.items():
         prediction = model.predict([text])[0]
         if config["log"]: print(f"{name} ({accuracies[name] * 100 :.2f}%): {"Real" if prediction else "Fake"}")
