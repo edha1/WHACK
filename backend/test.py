@@ -1,47 +1,40 @@
 import pandas as pd
-import joblib
 from sklearn.metrics import accuracy_score
-from utils import clean_text
-import glob
-import os
+from utils import clean_text, load_models, format_input
+import joblib, yaml
+with open("config.yaml", "r") as f: config = yaml.safe_load(f)
 
 # load test data
-df_test = pd.read_csv("dataset/test.csv")
+df_test = pd.read_pickle(config["dataset"]["test"])
 
 # clean text
 df_test["title"] = df_test["title"].apply(clean_text)
 df_test["content"] = df_test["content"].apply(clean_text)
 
 # combine title + content
-df_test["text"] = df_test["title"] + "\n" + df_test["content"]
+df_test["text"] = format_input(df_test["title"], df_test["content"])
 
-X_test = df_test["text"]
+x_test = df_test["text"]
 y_test = df_test["label"]
 
-# load all saved models
-model_files = glob.glob("models/*_model.joblib")
-
-confidences = {}
-
-for model_path in model_files:
-    model_name = model_path.replace("\\", "/").split("/")[-1].replace("_model.joblib", "")
-    model = joblib.load(model_path)
-
+# Load all saved models
+models, accuracies = load_models(), {}
+for name, model in models.items(): 
     try:
-        y_pred = model.predict(X_test)
-        acc = accuracy_score(y_test, y_pred)
-        confidences[model_name] = acc
-        print(f"{model_name}: {round(acc * 100, 2):.2f}%")
+        y_pred = model.predict(x_test)
+        accuracy = accuracy_score(y_test, y_pred)
+        accuracies[name] = accuracy
+        if config["log"]: print(f"{name}: {accuracy * 100:.2f}%")
     except Exception:
-        confidences[model_name] = 0.0
-        print(f"{model_name}: ERROR")
+        accuracies[name] = 0.0 # if there is any error in testing; set accuracy to zero
+        if config["log"]: print(f"{name}: ERROR")
 
-# === Write to models/confidences.py ===
-conf_path = "models/confidences.py"
-with open(conf_path, "w", encoding="utf-8") as f:
-    f.write("confidences = {\n")
-    for k, v in confidences.items():
+# write to accuracy file
+filepath = config["model"]["dir"] + "/" + config["model"]["accuracies"]
+with open(filepath, "w", encoding="utf-8") as f:
+    f.write("accuracies = {\n")
+    for k, v in accuracies.items():
         f.write(f'    "{k}": {v},\n')
     f.write("}\n")
 
-print("\n✅ Saved confidence scores to models/confidences.py")
+if config["log"]: print(f"\nSaved accuracy scores to {filepath}")
