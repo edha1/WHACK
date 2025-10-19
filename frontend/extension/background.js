@@ -3,7 +3,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
     // if news article 
   if (message.action === "sendNewsInfoToModel") {
-    fetch("http://localhost:5000/check-article", {
+    fetch("http://localhost:5000/check", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -20,7 +20,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
     // if twitter post 
   } else if (message.action === "sendTwitterInfoToModel") {
-    fetch("http://localhost:5000/check-article", {
+    fetch("http://localhost:5000/check", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
