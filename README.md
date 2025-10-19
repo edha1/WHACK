@@ -23,6 +23,7 @@ Accurate information is critical for effective decision-making. However, disting
 - Python  
 - Flask  
 - 11 AI/ML Models (Custom-trained for content accuracy analysis)
+- Models were trained and build using data from Kaggle Datasets(
 ---
 
 ## Setup Instructions:
