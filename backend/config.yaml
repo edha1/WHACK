@@ -1,0 +1,50 @@
+# dataset paths
+dataset:
+  raw: "dataset/data.pkl"
+  train: "dataset/training.pkl"
+  test: "dataset/testing.pkl"
+
+model:
+  dir: "models"
+  format: "_model.joblib"
+  accuracies: "accuracies.py"
+
+# training settings
+training:
+  test_size: 0.9 # fraction of dataset for training (rest is test) 
+  shuffle: true 
+  random_state: null # can set a seed 
+
+# classifier hyperparameters
+models:
+  LR:
+    max_iter: 1000
+  SGD:
+    max_iter: 1000
+    loss: "hinge"
+  PA:
+    max_iter: 1000
+  RC: {}
+  MNB: {}
+  BNB: {}
+  CNB: {}
+  DT: {}
+  RFC:
+    n_estimators: 200
+  ETC:
+    n_estimators: 200
+  GBC:
+    n_estimators: 200
+  ABC:
+    n_estimators: 200
+  BAG:
+    n_estimators: 50
+  SVC:
+    max_iter: 1000
+    # TF-IDF settings
+  tfidf:
+    max_features: 20000
+    ngram_range: [1, 2]
+
+# logging/output
+log: true
