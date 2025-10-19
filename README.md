@@ -45,7 +45,7 @@ python app.py
 ## 🎬 Demo
 
 
-![Popup UI](path/to/image.png)
+![Popup UI](demo/popup.png)
 *Popup Ui*
 
 ![Accuracy Rating UI](demo/accuracy_rating.png)
