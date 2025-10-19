@@ -9,7 +9,7 @@ Accurate information is critical for effective decision-making. However, disting
 
 ## 🚀 Our Solution
 
-**InforMATE** is an **AI-powered Chrome extension** that helps users evaluate the accuracy of online information, from news headlines to tweets. The tool extracts text from the active tab, sends it to a Flask backend, and leverages trained AI models to provide an accuracy score. It also supports **multilingual content** via Google Translate API, ensuring global applicability.
+**InforMATE** is an **AI-powered Chrome extension** that helps users evaluate the accuracy of online information, from news headlines and tweets. The tool either extracts text from the active tab, or allows users to input text, and sends it to a Flask backend. It leverages trained AI models to provide an accuracy score. It also supports **multilingual content** via Google Translate API, ensuring global applicability.
 
 ---
 
