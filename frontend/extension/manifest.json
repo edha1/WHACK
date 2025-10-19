@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Accuracy Level",
+  "name": "InforMATE",
   "version": "1.0",
-  "description": "Extension.",
+  "description": "Extension to detect the accuracy of news articles and twitter posts.",
   "permissions": [
     "tabs", 
     "scripting", 

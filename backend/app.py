@@ -10,7 +10,6 @@ CORS(app)
 @app.route('/check-article', methods=['POST'])
 def check_article():
     data = request.get_json()
-
     # Check data is intact (header and content exist)
     if not data or 'header' not in data or 'content' not in data:
         return jsonify({"error": "Missing 'header' or 'content'"}), 400
