@@ -27,11 +27,11 @@ def predict(title, content):
     text = f"{clean_text(title)}\n{clean_text(content)}"
     for name, model in models.items():
         pred = model.predict([text])[0]
-        print(f"{name}: {output_label(pred)} | {confidences[name]}")
+        # print(f"{name}: {output_label(pred)} | {confidences[name]}")
         x += (1 if pred else -1) * (confidences[name] / max(list(confidences.values())))
     x /= len(models.items()) 
     x = (x + 1) / 2
-    print("Final", x)
+    return x
 
 if __name__ == "__main__":
     title_input = """Blackstone says Wall Street is complacent about AI disruption"""
