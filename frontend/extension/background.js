@@ -1,6 +1,5 @@
 // send to the app.py to run into model
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-
   // if news article 
   if (message.action === "sendNewsInfoToModel") {
     fetch("http://localhost:5000/check", {
