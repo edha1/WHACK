@@ -25,19 +25,15 @@ import yaml
 with open("config.yaml", "r") as f: config = yaml.safe_load(f)
 
 models = {
-    "LR": LogisticRegression(**config["models"]["LR"]),
-    "MNB": MultinomialNB(**config["models"]["MNB"]),
-}
-"""
-    "LR": LogisticRegression(**config["models"]["LR"]),
-    "SVC": LinearSVC(**config["models"]["SVC"]),
-    "SGD": SGDClassifier(**config["models"]["SGD"]),
-    "PA": PassiveAggressiveClassifier(**config["models"]["PA"]),
-    "RC": RidgeClassifier(**config["models"]["RC"]),
+    #"LR": LogisticRegression(**config["models"]["LR"]),
+    #"SVC": LinearSVC(**config["models"]["SVC"]),
+    #"SGD": SGDClassifier(**config["models"]["SGD"]),
+    #"PA": PassiveAggressiveClassifier(**config["models"]["PA"]),
+    #"RC": RidgeClassifier(**config["models"]["RC"]),
 
-    "MNB": MultinomialNB(**config["models"]["MNB"]),
-    "BNB": BernoulliNB(**config["models"]["BNB"]),
-    "CNB": ComplementNB(**config["models"]["CNB"]),
+    #"MNB": MultinomialNB(**config["models"]["MNB"]),
+    #"BNB": BernoulliNB(**config["models"]["BNB"]),
+    #"CNB": ComplementNB(**config["models"]["CNB"]),
 
     "DT": DecisionTreeClassifier(**config["models"]["DT"]),
     "RFC": RandomForestClassifier(**config["models"]["RFC"]),
@@ -46,4 +42,3 @@ models = {
     "ABC": AdaBoostClassifier(**config["models"]["ABC"]),
     "BAG": BaggingClassifier(**config["models"]["BAG"]),
 }
-"""

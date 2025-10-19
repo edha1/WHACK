@@ -24,11 +24,11 @@ models:
     loss: "hinge"
   PA:
     max_iter: 1000
-  RC:
+  RC: {}
   MNB: {}
   BNB: {}
   CNB: {}
-  DT:
+  DT: {}
   RFC:
     n_estimators: 200
   ETC:
