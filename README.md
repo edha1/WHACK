@@ -48,7 +48,7 @@ python app.py
 ![Popup UI](path/to/image.png)
 *Popup Ui*
 
-![Accuracy Rating UI](path/to/image.png)
+![Accuracy Rating UI](demo/accuracy_rating.png)
 *Popup when displaying accuracy*
 ---
 
