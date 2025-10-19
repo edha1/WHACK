@@ -2,6 +2,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from run import predict
+from translate import translate_to_english
 
 app = Flask(__name__)
 # TODO: Restrict origins in prod
@@ -17,13 +18,17 @@ def check_article():
 
     # Handle Google API Cloud Translation
     if 'language' in data and not data['language'].startswith('en'):
-        app.logger.info("Non-English language detected. Placeholder for future handling.")
-
+        try:
+            data = translate_to_english(data)
+        except Exception as err:
+            app.logger.error(f"Translation failed: {err}")
+            return jsonify({"error": "Translation error"}), 500
+        
     # Return confidence level, otherwise 500
     try:
         accuracy = predict(data['header'], data['content'])
         app.logger.info(accuracy)
-        return jsonify({"accuracy": accuracy}), 200
+        return jsonify(accuracy), 200
     except Exception as err:
         app.logger.error(f"Prediction failed: {err}")
         return jsonify({"error": "Internal server error"}), 500
