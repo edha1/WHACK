@@ -48,29 +48,36 @@ const output = (label) => {
   cardEl.style.borderColor = 'var(--border)';
   pillEl.style.background = 'var(--pill)';
 
-  if (label >= 0.75) {
+  if (label >= 0.8) {
     accuracy.textContent = `${rounded}/100`;
     pillEl.style.background = 'var(--good)';
     cardEl.style.borderColor = 'var(--good)';
-    return 'Highly likely to be real';
+    return 'Very high confidence - credible source';
   }
 
-  if (label >= 0.5) {
+  if (label >= 0.6) {
+    accuracy.textContent = `${rounded}/100`;
+    pillEl.style.background = 'var(--good)';
+    cardEl.style.borderColor = 'var(--good)';
+    return 'High confidence - likely real';
+  }
+
+  if (label >= 0.4) {
     accuracy.textContent = `${rounded}/100`;
     pillEl.style.background = 'var(--warn)';
     cardEl.style.borderColor = 'var(--warn)';
-    return 'Likely to be real';
+    return 'Uncertain - verify before trusting';
   }
 
-  if (label >= 0.25) {
+  if (label >= 0.2) {
     accuracy.textContent = `${rounded}/100`;
     pillEl.style.background = 'var(--warn)';
     cardEl.style.borderColor = 'var(--warn)';
-    return 'Possibly fake';
+    return 'Low confidence - possible fake';
   }
 
   accuracy.textContent = `${rounded}/100`;
   pillEl.style.background = 'var(--bad)';
   cardEl.style.borderColor = 'var(--bad)';
-  return 'Quite possibly fake';
+  return 'Very low confidence - likely fake';
 };
