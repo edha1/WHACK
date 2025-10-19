@@ -1,14 +1,13 @@
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action === "getInformation") {
-
-    
+    let header = "";
     const pageLang = document.documentElement.lang || "unknown";
     // if looking at a twitter post, just send content to the model
     const tweetEl = document.querySelector('div[data-testid="tweetText"]');
     if (tweetEl) {
-        const twitterData = " " + "\n" + tweetEl.innerText.trim();
+        const twitterData = tweetEl.innerText.trim();
         chrome.runtime.sendMessage(
-        { action: "sendTwitterInfoToModel", twitterData },
+        { action: "sendTwitterInfoToModel",  header, content:twitterData },
         (response) => sendResponse(response)
         );
     } else {
@@ -39,12 +38,10 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
     // join all paragraphs into one continuous string
     const content = paragraphArr.join(" "); 
-    // combine header + newline + content to match model input 
-    const newsData = header + "\n" + content; 
     
 
     chrome.runtime.sendMessage(
-      { action: "sendNewsInfoToModel", newsData: newsData, language: pageLang },
+      { action: "sendNewsInfoToModel", header, content, language: pageLang },
       (response) => sendResponse(response)
     );
     }

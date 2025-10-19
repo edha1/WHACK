@@ -7,7 +7,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        newsData: message.newsData,
+        header: message.header,
+        content: message.content, 
         language: message.language
       }),
     })
@@ -23,7 +24,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        twitterData: message.twitterData
+        header: message.header, 
+        content: message.content
       }),
     })
       .then((res) => res.json())
