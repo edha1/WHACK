@@ -1,13 +1,151 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <title>Test Popup</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>InforMATE</title>
+
+    <style>
+      :root{
+        /* Midnight blue */
+        --bg:#182748;
+        --card:#0f1b33;
+        --text:#e9eef6;
+        --muted:#9fb0c8;
+
+        /* Brand + status */
+        --accent:#ff6bb2;     /* button */
+        --mate-red:#ff4d6d;   /* "MATE" word */
+        --good:#16a34a;
+        --warn:#f59e0b;
+        --bad:#ef4444;
+
+        --pill:#14233f;
+        --border:#1a2a4a;
+        --radius:18px;
+        --shadow:0 12px 34px rgba(0,0,0,.45);
+        --font: Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      }
+
+      *{ box-sizing:border-box; }
+      html, body{ margin:0; padding:0; width:360px; background:var(--bg); color:var(--text); font-family:var(--font); }
+      .container{ padding:16px; }
+
+      /* Header */
+      .header{ display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
+      .brand{ display:flex; align-items:center; gap:8px; font-weight:800; letter-spacing:.2px; }
+      .logo-dot{ width:10px; height:10px; border-radius:50%; background: var(--accent); display:inline-block; }
+      .brand .word{ font-size:14px; }
+      .brand .mate{ color: var(--mate-red); } /* MATE in red */
+      .icon-btn{ border:none; background:transparent; color:var(--text); font-size:16px; cursor:pointer; opacity:.9; }
+
+      /* Verdict Card */
+      .card{
+        background: var(--card);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        padding: 16px;
+        border: 6px solid var(--border); /* thicker frame */
+        margin-bottom: 14px;
+        position: relative;
+        overflow: hidden;
+      }
+      /* soft state tint + colored border */
+      .card.good{
+        border-color: var(--good);
+        background:
+          linear-gradient(180deg, color-mix(in oklab, var(--good) 12%, transparent), transparent),
+          var(--card);
+      }
+      .card.warn{
+        border-color: var(--warn);
+        background:
+          linear-gradient(180deg, color-mix(in oklab, var(--warn) 12%, transparent), transparent),
+          var(--card);
+      }
+      .card.bad{
+        border-color: var(--bad);
+        background:
+          linear-gradient(180deg, color-mix(in oklab, var(--bad) 12%, transparent), transparent),
+          var(--card);
+      }
+
+      .verdict-row{ display:flex; align-items:center; justify-content:space-between; gap:8px; }
+      .verdict{ font-weight: 900; font-size: 16px; line-height:1.3; }
+      .pill{ background: var(--pill); padding:6px 10px; border-radius: 999px; font-size:12px; }
+
+      .subtitle{ color: var(--muted); font-size:12px; margin: 6px 0 0; }
+      .hidden{ display:none !important; }
+
+      /* Manual scan */
+      .manual .label{ font-size:12px; color: var(--muted); margin-bottom:6px; display:block; }
+      .input-row{ display:flex; gap:8px; }
+      input[type="text"]{
+        flex:1; padding:12px 12px; border-radius: 12px; border:1px solid var(--border); background: #0d1830; color: var(--text); outline:none;
+      }
+      input::placeholder{ color: var(--muted); }
+      .primary{ background: var(--accent); color:#0b0d12; border:none; padding:12px 14px; border-radius: 12px; font-weight: 900; cursor:pointer; }
+
+      /* History */
+      .history{ margin-top: 12px; }
+      .hist-head{ display:flex; justify-content:space-between; align-items:center; font-size:12px; color: var(--muted); margin-bottom:8px; }
+      .tiny{ background: transparent; border: none; color: var(--muted); cursor: pointer; }
+      .hist-list{ display:flex; flex-direction: column; gap:8px; max-height: 140px; overflow:auto; }
+      .hist-item{
+        display:flex; gap:10px; align-items:center; background: #0d1830; border:1px solid var(--border); border-left-width: 8px; padding:10px; border-radius: 12px;
+      }
+      .hist-item .title{ font-size:12px; line-height:1.2; }
+      .hist-item .domain{ color: var(--muted); font-size:11px; }
+
+      /* Toast */
+      .toast{
+        position:fixed; left:50%; transform:translateX(-50%); bottom:10px;
+        background:#0d1830; border:1px solid var(--border); padding:8px 12px; border-radius:12px; opacity:0; transition: opacity .2s, transform .2s;
+      }
+      .toast.show{ opacity:1; transform:translateX(-50%) translateY(-4px); }
+    </style>
   </head>
+
   <body>
-    <h3>Hello!</h3>
-    <button id="get-input">Get Input</button>
-    <div id = "content">Content goes here hopefully</div>
-    <div id = "accuracy"> Score Here </div>
+    <div id="app" class="container">
+      <header class="header">
+        <div class="brand">
+          <span class="logo-dot"></span>
+          <span class="word">Infor<span class="mate">MATE</span></span>
+        </div>
+        <button id="themeToggle" class="icon-btn" title="Theme">🌙</button>
+      </header>
+
+      <!-- default state 'warn'; JS will toggle good/warn/bad -->
+      <section id="verdictCard" class="card warn">
+        <div class="verdict-row">
+          <span id="header" class="verdict">This post is most likely real</span>
+          <span id="accuracy" class="pill">82/100</span>
+        </div>
+        <!-- date kept but hidden so previous JS won’t break -->
+        <p id="date" class="subtitle hidden"></p>
+        <p id="content" class="subtitle">Content goes here</p>
+      </section>
+
+      <section class="manual">
+        <label for="manualInput" class="label">Text or URL</label>
+        <div class="input-row">
+          <input id="manualInput" type="text" placeholder="Paste a link or text…" />
+          <button id="get-input" class="primary">Run</button>
+        </div>
+      </section>
+
+      <section class="history">
+        <div class="hist-head">
+          <span>Recent checks</span>
+          <button id="clearHist" class="tiny">Clear</button>
+        </div>
+        <div id="historyList" class="hist-list"></div>
+      </section>
+
+      <div id="toast" class="toast" aria-live="polite"></div>
+    </div>
+
     <script src="popup.js"></script>
   </body>
 </html>

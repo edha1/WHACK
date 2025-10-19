@@ -38,3 +38,51 @@ const output = (label) => {
     }
 }
 
+/* ===== InforMATE Add-on: confidence → UI ===== */
+
+// Band from probability p in [0,1]
+function informateBandFromConfidence(p) {
+  if (p >= 0.75) return 'good';      // most likely real
+  if (p >= 0.50) return 'warn';      // uncertain — leans real
+  if (p >= 0.25) return 'warn';      // uncertain — leans fake
+  return 'bad';                      // most likely fake
+}
+
+// Headline text per band (uses p to disambiguate warn)
+function informateTextFromConfidence(p, band) {
+  if (band === 'good') return 'This post is most likely real';
+  if (band === 'bad')  return 'This post is most likely fake';
+  return (p >= 0.50) ? 'Uncertain — leans real' : 'Uncertain — leans fake';
+}
+
+// Main renderer (safe to call from your existing flow)
+// Accepts either { p: 0..1 } or { score: 0..100 }. Optional: { agree, total }.
+function informateRenderFromConfidence(opts) {
+  const headerEl = document.getElementById('header');
+  const pillEl   = document.getElementById('accuracy');
+  const cardEl   = document.getElementById('verdictCard');
+
+  const hasScore = typeof opts.score === 'number';
+  const hasP     = typeof opts.p === 'number';
+  const p        = hasP ? Math.max(0, Math.min(1, opts.p))
+                        : hasScore ? Math.max(0, Math.min(100, opts.score)) / 100
+                                   : 0.5;
+
+  const band     = informateBandFromConfidence(p);
+  const text     = informateTextFromConfidence(p, band);
+  const score100 = Math.round(p * 100);
+
+  cardEl.classList.remove('good','warn','bad');
+  cardEl.classList.add(band);
+
+  headerEl.textContent = text;
+  pillEl.textContent   = `${score100}/100`;
+
+  // If you later want to show agreement in the subline:
+  // const sub = document.getElementById('content');
+  // if (opts.total && typeof opts.agree === 'number') {
+  //   sub.textContent = `${opts.agree}/${opts.total} models agree`;
+  // }
+}
+
+/* ===== End Add-on ===== */
