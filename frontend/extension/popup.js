@@ -33,7 +33,6 @@ btn.addEventListener("click", () => {
                 accuracy.innerHTML = "Error getting data.";
                 return;
             }
-            alert(response); 
             // change the text of the popup based on value of accuracy
             headerEl.textContent =
                 output(response?.accuracy) || "Failed to see accuracy";
