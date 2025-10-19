@@ -1,7 +1,7 @@
 // send to the app.py to run into model
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
-    // if news article 
+  // if news article 
   if (message.action === "sendNewsInfoToModel") {
     fetch("http://localhost:5000/check", {
       method: "POST",
@@ -19,7 +19,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     return true; // keep the message channel open
 
     // if twitter post 
-  } else if (message.action === "sendTwitterInfoToModel") {
+  } else if (message.action === "sendTwitterInfoToModel") { 
     fetch("http://localhost:5000/check", {
       method: "POST",
       headers: { "Content-Type": "application/json" },

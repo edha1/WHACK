@@ -1,6 +1,6 @@
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  if (message.action === "getAccuracyFromPage") {
     let header = "";
+  if (message.action === "getAccuracyFromPage") {
     const pageLang = document.documentElement.lang || "unknown";
 
     // if looking at a twitter post, just send content to the model
@@ -37,15 +37,15 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         // join all paragraphs into one continuous string
         const content = paragraphArr.join(" "); 
         chrome.runtime.sendMessage(
-        { action: "sendNewsInfoToModel", header, content, language: pageLang },
-        (response) => sendResponse(response)
+            { action: "sendNewsInfoToModel", header, content, language: pageLang },
+            (response) => sendResponse(response)
         );
         }
         return true; 
   } else if (message.action === "getAccuracyFromInput") {
     const inputText = message.text; 
     chrome.runtime.sendMessage(
-        { action: "sendTwitterInfoToModel", header:header, content:inputText },
+        { action: "sendTwitterInfoToModel", header, content:inputText },
         (response) => sendResponse(response)
     );
     return true; 

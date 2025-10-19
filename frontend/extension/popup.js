@@ -14,7 +14,7 @@ btn.addEventListener("click", () => {
     const tabId = tabs[0].id;
 
     chrome.scripting.executeScript({ target: { tabId }, files: ["content.js"] }, () => {
-        if (manInput.textContent === "") { 
+        if (userText === "") { 
             chrome.tabs.sendMessage(tabId, { action: "getAccuracyFromPage" }, (response) => {
             if (chrome.runtime.lastError) {
                 console.error("Error:", chrome.runtime.lastError.message);
@@ -26,7 +26,7 @@ btn.addEventListener("click", () => {
             headerEl.textContent =
                 output(response?.accuracy) || "Failed to see accuracy";
             });
-        } else if (manInput.textContent !== "") {
+        } else if (userText !== "") {
             chrome.tabs.sendMessage(tabId, { action: "getAccuracyFromInput", text: userText }, (response) => {
             if (chrome.runtime.lastError) {
                 console.error("Error:", chrome.runtime.lastError.message);
@@ -42,7 +42,6 @@ btn.addEventListener("click", () => {
   });
 });
 
-
 const output = (label) => {
   const rounded = (label * 100).toFixed(0);
 
@@ -53,25 +52,25 @@ const output = (label) => {
     accuracy.textContent = `${rounded}/100`;
     pillEl.style.background = 'var(--good)';
     cardEl.style.borderColor = 'var(--good)';
-    return 'Likely to be real';
+    return 'Highly likely to be real';
   }
 
   if (label >= 0.5) {
     accuracy.textContent = `${rounded}/100`;
     pillEl.style.background = 'var(--warn)';
     cardEl.style.borderColor = 'var(--warn)';
-    return 'Quite likely to be real';
+    return 'Likely to be real';
   }
 
   if (label >= 0.25) {
     accuracy.textContent = `${rounded}/100`;
     pillEl.style.background = 'var(--warn)';
     cardEl.style.borderColor = 'var(--warn)';
-    return 'Quite likely to be fake';
+    return 'Possibly fake';
   }
 
   accuracy.textContent = `${rounded}/100`;
   pillEl.style.background = 'var(--bad)';
   cardEl.style.borderColor = 'var(--bad)';
-  return 'Likely to be fake';
+  return 'Quite possibly fake';
 };
